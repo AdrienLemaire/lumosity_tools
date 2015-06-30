@@ -12,6 +12,13 @@ Install the dependencies:
 
     $ pip install -r requirements.txt
 
+Create a new file `local_settings.py` and add your email/password credentials
+there:
+
+    # local_settings.py 
+    EMAIL = "you@example.com"
+    PASSWORD = "your_lumosity_password"
+
 
 # Usage
 
