@@ -5,6 +5,7 @@ import argparse
 from bs4 import BeautifulSoup as bs
 import datetime
 import json
+import operator
 import os.path
 import requests
 
@@ -38,10 +39,23 @@ def main(date=None):
             raw.rfind('}'))+1])
 
     results = data['calendarData'][0]['data']['results']
-    for area in results.keys():
+    stats = {}
+
+    for day_result in data['calendarData']:
+        results = day_result['data']['results']
+        for area in results.keys():
+            if not area in stats.keys():
+                stats[area] = {}
+            for game in results[area]:
+                if not game['game'] in stats[area].keys():
+                    stats[area][game['game']] = game['bpi'] or 0
+
+    for area in stats.keys():
         print(area)
-        for game in results[area]:
-            print('\t* {}:{}'.format(game['game'], game['bpi']))
+        for game, lpi in sorted(stats[area].items(), key=operator.itemgetter(1),
+                reverse=True):
+            print('\t* {}:{}'.format(game, lpi))
+
 
 
 def parse_args():
