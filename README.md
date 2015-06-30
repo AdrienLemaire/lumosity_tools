@@ -23,7 +23,8 @@ there:
 # Usage
 
 Get ordered list of games LPI. This allows you to quickly find what game you
-need to train in order to improve your overall LPI:
+need to train in order to improve your overall LPI (note: LPI=0 is for games
+without LPI, if you didn't play them 5 times)
 
     $ ./fetch_lpi.py
     http://www.lumosity.com/app/v4/training_history/summaries/2015-07-01
