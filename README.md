@@ -22,7 +22,8 @@ there:
 
 # Usage
 
-Get today games LPI:
+Get ordered list of games LPI. This allows you to quickly find what game you
+need to train in order to improve your overall LPI:
 
     $ ./fetch_lpi.py
     http://www.lumosity.com/app/v4/training_history/summaries/2015-07-01
