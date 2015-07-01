@@ -12,9 +12,7 @@ import requests
 from local_settings import EMAIL, PASSWORD
 
 
-def main(date=None):
-    if not date:
-        date = datetime.datetime.today().strftime("%Y-%m-%d")
+def main(date):
     data = {}
     with requests.Session() as s:
         # 1. login
@@ -49,7 +47,10 @@ def main(date=None):
             for game in results[area]:
                 if not game['game'] in stats[area].keys():
                     stats[area][game['game']] = game['bpi'] or 0
+    return stats
 
+
+def print_stats(stats):
     for area in stats.keys():
         print(area)
         for game, lpi in sorted(stats[area].items(), key=operator.itemgetter(1),
@@ -60,11 +61,27 @@ def main(date=None):
 
 def parse_args():
     parser = argparse.ArgumentParser(description='List your Games LPIs')
-    parser.add_argument('-i', action="store", dest='item',
-                        help='date (yyyy-mm-dd)')
+    parser.add_argument('-d', action="store", dest='date',
+                        help='date (yyyy-mm-dd) [default today]')
+    parser.add_argument('-s', action="store", dest='span', default=8,
+                        help='number of history days to crawl [default 8]')
     return parser.parse_args()
 
 
 if __name__ == '__main__':
     args = parse_args()
-    main(args.item)
+    stats = {}
+    if not args.date:
+        for i in range(args.span):
+            date = datetime.datetime.today() - datetime.timedelta(i)
+            day_stats = main(date.strftime("%Y-%m-%d"))
+            for area in day_stats.keys():
+                if not area in stats.keys():
+                    stats[area] = {}
+                for game in day_stats[area].keys():
+                    if not game in stats[area].keys():
+                        stats[area][game] = day_stats[area][game]
+    else:
+        stats = main(args.date)
+
+    print_stats(stats)
