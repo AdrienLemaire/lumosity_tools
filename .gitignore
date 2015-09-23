@@ -1,5 +1,5 @@
 local_settings.py
-history
+history*
 *pyc
 *swp
 *swo
